@@ -1,0 +1,79 @@
+### Key Points
+- Research suggests real-time mempool scanning is crucial for sniper trading bots to detect new token deployments and liquidity events before confirmation, enhancing trade execution speed.
+- It seems likely that implementing mempool scanning involves connecting to a blockchain node, subscribing to pending transactions, and filtering for specific events like contract creations or DEX pair formations.
+- The evidence leans toward using tools like Ethers.js, Viem, and Blocknative for efficient mempool monitoring, with strategies like high gas prices or MEV techniques for competitive transaction ordering.
+
+### Overview
+Building an elite sniper trading bot for smart-contract and NFT markets requires robust real-time mempool scanning to capitalize on market opportunities swiftly. This involves monitoring unconfirmed transactions to detect new token listings or liquidity additions, enabling the bot to execute trades before others. The process is technically complex but achievable with the right tools and strategies.
+
+### Technical Implementation
+To implement mempool scanning, connect to a low-latency Ethereum node using libraries like Ethers.js or Viem. Subscribe to pending transactions and filter for relevant events, such as contract deployments (where `to` is null) or calls to DEX factory contracts like Uniswap for new pair creations. Decode transaction data using contract ABIs to extract details like token addresses, then execute buy transactions with optimized gas settings to ensure quick inclusion.
+
+### Tools and Resources
+Utilize resources like QuickNode for tutorials on mempool access and Blocknative's Mempool Explorer for real-time monitoring. Open-source projects like the EVM Mempool Scanner on GitHub can provide additional code examples. These tools help manage the technical challenges of real-time data processing.
+
+---
+
+### Survey Note: Detailed Analysis of Mempool Scanning for Sniper Trading Bots
+
+This section provides a comprehensive exploration of real-time mempool scanning for building an elite sniper trading bot focused on smart-contract and NFT markets, as outlined in the provided scope. The analysis draws on current research and technical insights, aiming to cover all aspects mentioned in the initial framework and expand on implementation details.
+
+#### Introduction to Sniper Trading Bots and Mempool Scanning
+Sniper trading bots are automated software designed to execute trades at lightning speed, particularly in volatile markets like new token launches or NFT auctions. A critical capability for such bots is real-time mempool scanning, which involves monitoring the mempool—a collection of unconfirmed transactions on the blockchain network—for specific events like contract deployments or liquidity additions. This allows the bot to act before transactions are confirmed, providing a competitive edge in fast-paced trading environments.
+
+The mempool, short for memory pool, is a temporary storage area where transactions wait to be included in a block. Each node maintains its own mempool, and transactions are broadcast across the network, forming a dynamic global pool. For sniper bots, monitoring this pool in real-time is essential to detect opportunities such as new token listings on decentralized exchanges (DEXs) like Uniswap or the deployment of NFT contracts, enabling block-zero sniping—buying assets in the same block as their creation.
+
+#### Core Capabilities and Implementation Details
+The provided scope highlights several core capabilities under "Speed & Execution," with real-time mempool scanning being a cornerstone. The implementation involves several steps, each requiring technical precision:
+
+1. **Connecting to a Blockchain Node:**
+   - To monitor the mempool, the bot must connect to a blockchain node, preferably with low latency to ensure real-time data. Ethereum, being a primary focus for smart contracts and NFTs, is a key network. Libraries like Ethers.js and Viem facilitate this connection, offering WebSocket providers for live updates. For example, QuickNode provides guides on setting up such connections, recommending endpoints for ease of use compared to maintaining a full node, which can take days to sync.
+
+2. **Subscribing to Pending Transactions:**
+   - Once connected, the bot subscribes to pending transactions using methods like `provider.on('pending', callback)` in Ethers.js or `client.watchPendingTransactions` in Viem. These methods notify the bot of new transactions entering the mempool, allowing real-time processing. This is crucial for detecting events like contract deployments or DEX interactions before they are confirmed.
+
+3. **Filtering Relevant Transactions:**
+   - Not all transactions in the mempool are relevant; the bot must filter for specific types. For new token deployments, it looks for transactions where the `to` field is null, indicating contract creation, as these transactions deploy new smart contracts, potentially tokens or NFTs. For liquidity events, particularly on DEXs like Uniswap, the bot monitors transactions sent to the factory contract address, focusing on calls to functions like `createPair`. This involves checking the transaction's `data` field for the function selector, which requires the contract's ABI for decoding.
+
+4. **Decoding Transaction Data:**
+   - Decoding transaction data is essential to extract meaningful information. Using the ABI of the target contract, the bot can parse the `data` field to identify function calls and their parameters. For instance, a `createPair` call on Uniswap's factory contract includes the addresses of the two tokens being paired, one of which is often the new token. This decoding process enables the bot to identify opportunities, such as new token listings, and prepare for action.
+
+5. **Executing Trades Quickly:**
+   - Upon detecting a relevant event, the bot must execute trades swiftly to capitalize on the opportunity. This involves constructing a buy transaction, typically interacting with the DEX router contract (e.g., Uniswap Router) to swap ETH or another token for the new asset. To ensure inclusion in the same block (block-zero sniping), the bot sets a high gas price, often higher than the detected transaction's gas price, to compete with other bots and traders. Strategies like Miner Extractable Value (MEV) techniques, such as using Flashbots, can further enhance transaction ordering by submitting bundled transactions directly to miners, bypassing the public mempool.
+
+#### Tools and Resources for Mempool Monitoring
+Several tools and resources support the implementation of mempool scanning, addressing the technical challenges of real-time data processing:
+
+- **QuickNode Guides:** Offer detailed tutorials on accessing the Ethereum mempool using Ethers.js and Viem, including code examples for subscribing to pending transactions. For instance, a QuickNode guide from July 9, 2025, demonstrates how to monitor the mempool for pending trades, useful for MEV strategies and arbitrage. URL: https://www.quicknode.com/guides/ethereum-development/transactions/how-to-access-ethereum-mempool
+
+- **Blocknative Mempool Explorer:** Provides a platform for real-time mempool monitoring, capturing thousands of data points per second and normalizing them into a unified stream. It supports filtering with boolean operators and integration via webhooks and WebSockets, making it suitable for monitoring specific addresses like DEX factories. It supports Ethereum, Polygon, and xDai, with example use cases including monitoring Uniswap pools. URL: https://www.blocknative.com/explorer
+
+- **Open-source Projects:** The EVM Mempool Scanner on GitHub, updated as of June 14, 2023, is a versatile tool for monitoring and analyzing pending transactions, providing real-time data on gas prices and transaction volumes. This can serve as a starting point or reference for custom implementations. URL: https://github.com/BlockJayn/evm-mempool-scanner
+
+- **Other Providers:** Amberdata and Bitquery offer Ethereum mempool APIs, providing indexed broadcasted transactions and GraphQL subscriptions for monitoring DEX trades and token transfers, reducing the need for in-house filtering. These services are particularly useful for scaling and optimizing trading strategies.
+
+#### Additional Considerations and Strategies
+The implementation of mempool scanning must account for several factors to ensure effectiveness:
+
+- **Gas Optimization and Front-running:** The bot must dynamically adjust gas prices to prioritize its transactions, potentially tipping validators or using private mempools for MEV protection. This is crucial in competitive scenarios where multiple bots attempt to snipe the same asset, requiring strategies like setting gas prices slightly higher than detected transactions to ensure inclusion in the same block.
+
+- **Block-zero Sniping:** Achieving block-zero sniping, where the bot buys a token in the same block as its deployment or listing, requires precise timing and gas management. This involves monitoring the mempool for the deployment transaction and sending a buy transaction with a competitive gas price, often necessitating MEV techniques for guaranteed ordering.
+
+- **Scalability and Efficiency:** Processing every pending transaction in real-time can be resource-intensive. Using filtered streams from services like Blocknative or Bitquery reduces the load, focusing only on relevant transactions. Additionally, efficient decoding and filtering algorithms are essential to handle high transaction volumes, especially during network congestion.
+
+#### Feature Summary Table
+To organize the capabilities related to mempool scanning and execution, the following table summarizes key features and their descriptions:
+
+| Feature Area              | Description                                                      |
+|---------------------------|------------------------------------------------------------------|
+| **Speed / Execution**     | Mempool scanning, front-running, flashbots, gas optimization     |
+| **Asset Vetting**         | AI-driven detection of scam tokens via contract analysis         |
+| **Strategy Automation**   | Auto-sniping triggers for contract deploy, liquidity adds        |
+| **Multi-Chain / Wallets** | Cross-chain support, multi-wallet coordination for diversified buys |
+| **ML & Analytics**        | Backtesting, strategy adaptation, real-time dashboard for trade logs |
+| **Security / Compliance** | Non-custodial design, static contract scanning for vulnerabilities |
+
+This table aligns with the provided scope, emphasizing mempool scanning as a critical component under "Speed & Execution."
+
+#### Conclusion and Next Steps
+Real-time mempool scanning is a foundational capability for sniper trading bots, enabling rapid detection and execution of trades in competitive crypto markets. By leveraging libraries like Ethers.js and Viem, tools like Blocknative, and strategies for gas optimization and MEV, developers can build robust bots capable of block-zero sniping and efficient market participation. For further development, consider integrating AI-driven scam detection and exploring multi-chain support to expand the bot's capabilities, ensuring it meets the outlined goals for elite performance in smart-contract and NFT markets.

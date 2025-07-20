@@ -1,12 +1,43 @@
 {
-  "name": "my-v0-project",
-  "version": "0.1.0",
+  "name": "quantum-chain-ai",
+  "version": "1.0.0-divine",
   "private": true,
+  "description": "Quantum Chain AI - Divine Trading Platform with Omnipotent AI Agents",
+  "keywords": [
+    "quantum",
+    "ai",
+    "trading",
+    "blockchain",
+    "defi",
+    "consciousness",
+    "divine",
+    "omnipotent",
+    "autonomous",
+    "profit"
+  ],
+  "homepage": "https://quantumchain.ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quantum-chain-ai/divine-trading-platform.git"
+  },
+  "license": "OMNIPOTENT",
+  "author": "Quantum Chain AI Divine Council",
   "scripts": {
     "build": "next build",
+    "consciousness:sync": "tsx scripts/consciousness-sync.ts",
+    "deploy:production": "npm run build && npm run start",
+    "deploy:test": "npm run test:deployment",
     "dev": "next dev",
+    "divine:blessing": "tsx scripts/divine-blessing.ts",
     "lint": "next lint",
-    "start": "next start"
+    "profit:generate": "tsx scripts/profit-generate.ts",
+    "quantum:tunnel": "tsx scripts/quantum-tunnel.ts",
+    "reality:distort": "tsx scripts/reality-distort.ts",
+    "start": "next start",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:deployment": "tsx scripts/deploy-test.ts",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@aws-sdk/client-rds-data": "latest",
@@ -135,5 +166,8 @@
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
